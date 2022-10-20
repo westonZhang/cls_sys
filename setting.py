@@ -2,11 +2,12 @@
 
 # mysql数据库配置
 MYSQL_CONFIG = {
-    "host":"127.0.0.1",
+    # "host":"127.0.0.1",
+    "host":"101.43.61.66",
     "port":3306,
     "user":"root",
-    "password":"123456",
-    "database":"class_manage_system",
+    "password":"weston987",
+    "database":"cls_sys",
     "charset":"utf8",
 }
 
