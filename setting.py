@@ -12,8 +12,8 @@ MYSQL_CONFIG = {
 }
 
 # 数据库表
-TABLE_班级表 = "classes"
-TABLE_班主任表 = "head_teachers"
-TABLE_系主任表 = "head_departs"
-TABLE_检查员表 = "inspectors"
-TABLE_检查结果表 = "inspect_results"
+TABLE_班级表 = "inspect_class"
+TABLE_班主任表 = "person_headteacher"
+TABLE_系主任表 = "person_headdepart"
+TABLE_检查员表 = "person_inspector"
+TABLE_检查结果表 = "inspect_result"

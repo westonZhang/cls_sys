@@ -6,7 +6,7 @@ create database if not exists cls_sys default character set "utf8";
 
 -- 二、 创建表：
 -- 2.1 人员表：班主任表、系主任表、检查员表
--- 2.1.1 班主任表 person_head_teachers
+-- 2.1.1 班主任表 person_headteacher
 create table if not exists person_headteacher(
     id          varchar(64) not null primary key comment "使用md5加密的id",
     name        varchar(32) not null comment "姓名",
@@ -16,7 +16,7 @@ create table if not exists person_headteacher(
     token       varchar(32) comment "token"
 ) default charset=utf8 comment '班主任表';
 
--- 2.1.2 系主任表 person_head_departs
+-- 2.1.2 系主任表 person_headdepart
 create table if not exists person_headdepart(
     id          varchar(64) not null primary key comment "使用md5加密的id",
     name        varchar(32) not null comment "姓名",
@@ -26,7 +26,7 @@ create table if not exists person_headdepart(
     token       varchar(32) comment "token"
 ) default charset=utf8 comment '系主任表';
 
--- 2.1.3 检查员表 person_inspectors
+-- 2.1.3 检查员表 person_inspector
 create table if not exists person_inspector(
     id          varchar(64) not null primary key comment "使用md5加密的id",
     name        varchar(32) not null comment "姓名",
@@ -37,7 +37,7 @@ create table if not exists person_inspector(
 ) default charset=utf8 comment '检查员表';
 
 -- 2.2 创建检查表：检查的班级、检查项目的分类
--- 2.2.1 需要检查的班级 inspect_classes
+-- 2.2.1 需要检查的班级 inspect_class
 create table if not exists inspect_class(
     id                  int         not null primary key auto_increment comment "id",
     cls                 varchar(32) not null comment "班级",
@@ -48,48 +48,48 @@ create table if not exists inspect_class(
 
 -- 2.2.2 检查项目的分类：教室、宿舍、个人卫生、楼值、纪律
 -- 1） 教室 inspectitem_classroom
-create table if not exists inspectitem_classroom (
-    id              int not null    primary key auto_increment comment "id",
-    blackboard      int comment "黑板的分值",
-    chair           int comment "桌椅的分值",
-    cup             int comment "杯子的摆放分值",
-    ground          int comment "地面的分值",
-    light           int comment "灯的分值",
-    door            int comment  "门窗的分值",
-    waste_basket    int comment  "垃圾桶的分值"
-) default charset=utf8 comment '检查项目-教室表';
+-- create table if not exists inspectitem_classroom (
+--     id              int not null    primary key auto_increment comment "id",
+--     blackboard      int comment "黑板的分值",
+--     chair           int comment "桌椅的分值",
+--     cup             int comment "杯子的摆放分值",
+--     ground          int comment "地面的分值",
+--     light           int comment "灯的分值",
+--     door            int comment  "门窗的分值",
+--     waste_basket    int comment  "垃圾桶的分值"
+-- ) default charset=utf8 comment '检查项目-教室表';
 
--- 2） 宿舍 inspectitem_dorm
-create table if not exists inspectitem_dorm (
-    id          int not null    primary key auto_increment comment "id",
-    blackboard  int comment "黑板的分值",
-    bed         int comment "床、被子的分值",
-    door        int comment  "门窗的分值",
-    waste_basket    int comment  "垃圾桶的分值"
-) default charset=utf8 comment '检查项目-宿舍表';
+-- -- 2） 宿舍 inspectitem_dorm
+-- create table if not exists inspectitem_dorm (
+--     id          int not null    primary key auto_increment comment "id",
+--     blackboard  int comment "黑板的分值",
+--     bed         int comment "床、被子的分值",
+--     door        int comment  "门窗的分值",
+--     waste_basket    int comment  "垃圾桶的分值"
+-- ) default charset=utf8 comment '检查项目-宿舍表';
 
--- 3） 个人卫生 inspectitem_personal
-create table if not exists inspectitem_personal (
-    id          int not null    primary key auto_increment comment "id",
-    hair        int comment  "头发的分值",
-    clothes     int comment  "服装的分值",
-    jewelry     int comment  "饰品的分值"
-) default charset=utf8 comment '检查项目-个人卫生表';
+-- -- 3） 个人卫生 inspectitem_personal
+-- create table if not exists inspectitem_personal (
+--     id          int not null    primary key auto_increment comment "id",
+--     hair        int comment  "头发的分值",
+--     clothes     int comment  "服装的分值",
+--     jewelry     int comment  "饰品的分值"
+-- ) default charset=utf8 comment '检查项目-个人卫生表';
 
--- 4） 楼值 inspectitem_floor
-create table if not exists inspectitem_floor (
-    id          int not null    primary key auto_increment comment "id",
-    toilet      int comment  "卫生间的分值",
-    corridor    int comment  "楼道的分值"
-) default charset=utf8 comment '检查项目-楼值表';
+-- -- 4） 楼值 inspectitem_floor
+-- create table if not exists inspectitem_floor (
+--     id          int not null    primary key auto_increment comment "id",
+--     toilet      int comment  "卫生间的分值",
+--     corridor    int comment  "楼道的分值"
+-- ) default charset=utf8 comment '检查项目-楼值表';
 
--- 5） 纪律 inspectitem_discipline
-create table if not exists inspectitem_discipline (
-    id      int not null    primary key auto_increment comment "id",
-    talk    int comment  "上课讲话的分值",
-    sleep   int comment  "上课睡觉的分值",
-    phone   int comment  "上课玩手机的分值"
-) default charset=utf8 comment '检查项目-纪律表';
+-- -- 5） 纪律 inspectitem_discipline
+-- create table if not exists inspectitem_discipline (
+--     id      int not null    primary key auto_increment comment "id",
+--     talk    int comment  "上课讲话的分值",
+--     sleep   int comment  "上课睡觉的分值",
+--     phone   int comment  "上课玩手机的分值"
+-- ) default charset=utf8 comment '检查项目-纪律表';
 
 
 -- 2.2.3 检查结果表 inspect_result
