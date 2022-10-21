@@ -17,3 +17,8 @@ TABLE_班主任表 = "person_headteacher"
 TABLE_系主任表 = "person_headdepart"
 TABLE_检查员表 = "person_inspector"
 TABLE_检查结果表 = "inspect_result"
+
+# 人员类型
+ptype_班主任 = "bzr"
+ptype_系主任 = "xzr"
+ptype_检查员 = "jcy"

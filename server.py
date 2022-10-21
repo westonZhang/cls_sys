@@ -12,14 +12,14 @@ def home_page():
     return "hello"
 
 
-@app.route('/inspector_login', methods=["GET",'POST'])
-def inspector_login():
+@app.route('/login', methods=["GET",'POST'])
+def login():
     """
-    get:获取检查员登陆信息
-    return:返回检察员的id、username、token
+    get:获取人员的登陆信息
+    return:返回人员的id、username、token、类型
     """
     # 设置返回值
-    return_value = {"status_code":200,"msg":{"error_msg":"","token":"","id":"","name":""}}
+    return_value = {"status_code":200,"msg":{"error_msg":"","token":"","id":"","name":"","ptype":""}}
     
     # 如果使用get方法发送请求，则返回错误信息
     if request.method == "GET":
@@ -31,18 +31,34 @@ def inspector_login():
     info = request.form
     username = info.get("username")
     password = info.get("password")
+    ptype = info.get("ptype")  # 人员类型
     
     if not username or not password:
         return_value["status_code"] = 404
         return_value['msg']['error_msg'] = "用户名或密码为空！"
+        return return_value
 
     # 判断传递过来的username和password是否正确
     # 查询id，name
-    query_sql = f"select id,name from {st.TABLE_检查员表} where username='{username}' and password='{password}'"
+    # 根据ptype判断从哪张表查找数据
+    if ptype == st.ptype_班主任:
+        return_value['msg']['ptype'] = "班主任"
+        query_sql = f"select id,name from {st.TABLE_班主任表} where username='{username}' and password='{password}'"
+    elif ptype == st.ptype_系主任:
+        return_value['msg']['ptype'] = "系主任"
+        query_sql = f"select id,name from {st.TABLE_系主任表} where username='{username}' and password='{password}'"
+    elif ptype == st.ptype_检查员:
+        return_value['msg']['ptype'] = "检查员"
+        query_sql = f"select id,name from {st.TABLE_检查员表} where username='{username}' and password='{password}'"
+    else:
+        return_value["status_code"] = 404
+        return_value['msg']['error_msg'] = "“人员类型”参数有误，bzr/xzr/jcy三选一！"
+        return return_value
+
     res = us.query(query_sql)
     if not res:
         return_value["status_code"] = 404
-        return_value['msg']['error_msg'] = "用户名或密码有误！"
+        return_value['msg']['error_msg'] = f"用户名或密码有误！或者【{return_value['msg']['ptype']}】中查无此人！"
         return return_value
     
     # 补充完成返回值，并返回
