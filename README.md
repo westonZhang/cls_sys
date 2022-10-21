@@ -8,12 +8,14 @@
         - username：用户名
         - password：密码
     - 举例：
-        - 班主任吴洁需要登陆：username="吴洁",password="wujie321"
-        - 检查员吴洁需要登陆：username="吴洁",password="wujie321"
-        - 系主任方荣卫需要登陆：username="方荣卫",password="fangrongwei321"
+        - 班主任吴洁需要登陆：
+        `username="吴洁",password="wujie321"`
+        - 检查员吴洁需要登陆：`username="吴洁",password="wujie321"`
+        - 系主任方荣卫需要登陆：`username="方荣卫",password="fangrongwei321"`
         
 - 返回结果
     - 正确请求：
+        ```
         {   "status_code":200,
             "msg":{
                 "error_msg":"",
@@ -26,8 +28,10 @@
                 "permission_level":"权限等级，1~4级，4级最高",
             }
         }
+        ```
     - 错误请求：
-        - **参数错误**(即"username"或"password"这两个单词拼写错误，或者它们对应的值为空)：
+        - **参数错误**（即"username"或"password"这两个单词拼写错误，或者它们对应的值为空）：
+        ```
         {   "status_code":200,
             "msg":{
                 "error_msg":"用户名或密码为空！",
@@ -40,7 +44,9 @@
                 "permission_level":"",
             }
         }
+        ```
         - **用户名或密码错误**：
+        ```
         {   "status_code":200,
             "msg":{
                 "error_msg":"用户名或密码有误！",
@@ -53,3 +59,11 @@
                 "permission_level":"",
             }
         }
+        ```
+- 举例如图：
+    - 正确访问：
+    ![](https://tva1.sinaimg.cn/large/008vxvgGly1h7da0dmccjj31bx0u0wj4.jpg)
+    - 参数错误：
+    ![](https://tva1.sinaimg.cn/large/008vxvgGly1h7da0dfylyj31b00u0aew.jpg)
+    - 用户名或密码错误
+    ![](https://tva1.sinaimg.cn/large/008vxvgGly1h7da0d7zi7j31av0u0q7h.jpg)
