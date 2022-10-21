@@ -5,45 +5,28 @@ create database if not exists cls_sys default character set "utf8";
 ------------------------------------------------------------------------------------
 
 -- 二、 创建表：
--- 2.1 人员表：班主任表、系主任表、检查员表
--- 2.1.1 班主任表 person_headteacher
-create table if not exists person_headteacher(
-    id          varchar(64) not null primary key comment "使用md5加密的id",
+-- 2.1 人员表 user
+create table if not exists user(
+    id         varchar(64) not null primary key comment "对姓名使用md5加密的id",
     name        varchar(32) not null comment "姓名",
-    username    varchar(64) not null comment "用户名",
-    password      varchar(64) not null comment "密码",
-    depart      varchar(32) comment "院系",
+    username    varchar(64) not null comment "登陆的用户名",
+    password    varchar(64) not null comment "登陆的密码",
+    is_headdepart   tinyint not null default 0 comment "是不是系主任",
+    is_inspector    tinyint not null default 0 comment "是不是检查员",
+    is_headteacher  tinyint not null default 0 comment "是不是班主任",
+    depart      varchar(32) default "信息技术" comment "院系",
+    permission_level    tinyint not null default 1 comment "权限等级:1级、2级、3级、4级,4级最高",
     token       varchar(32) comment "token"
-) default charset=utf8 comment '班主任表';
-
--- 2.1.2 系主任表 person_headdepart
-create table if not exists person_headdepart(
-    id          varchar(64) not null primary key comment "使用md5加密的id",
-    name        varchar(32) not null comment "姓名",
-    username    varchar(64) not null comment "用户名",
-    password      varchar(64) not null comment "密码",
-    depart      varchar(32) comment "院系",
-    token       varchar(32) comment "token"
-) default charset=utf8 comment '系主任表';
-
--- 2.1.3 检查员表 person_inspector
-create table if not exists person_inspector(
-    id          varchar(64) not null primary key comment "使用md5加密的id",
-    name        varchar(32) not null comment "姓名",
-    username    varchar(64) not null comment "用户名",
-    password      varchar(64) not null comment "密码",
-    depart      varchar(32) comment "院系",
-    token       varchar(32) comment "token"
-) default charset=utf8 comment '检查员表';
+) default charset=utf8 comment '人员表';
 
 -- 2.2 创建检查表：检查的班级、检查项目的分类
 -- 2.2.1 需要检查的班级 inspect_class
 create table if not exists inspect_class(
-    id                  int         not null primary key auto_increment comment "id",
-    cls                 varchar(32) not null comment "班级",
-    grade               varchar(32) comment "年级",
-    depart              varchar(32) comment "院系",
-    headteacher_id     tinyint not null comment "班主任id"
+    id          int         not null primary key auto_increment comment "id",
+    cls         varchar(32) not null comment "班级",
+    grade       varchar(32) comment "年级",
+    depart      varchar(32) default "信息技术" comment "院系",
+    user_id     tinyint not null comment "对应的user表中的班主任id"
 ) default charset=utf8 comment '班级表';
 
 -- 2.2.2 检查项目的分类：教室、宿舍、个人卫生、楼值、纪律
@@ -91,7 +74,6 @@ create table if not exists inspect_class(
 --     phone   int comment  "上课玩手机的分值"
 -- ) default charset=utf8 comment '检查项目-纪律表';
 
-
 -- 2.2.3 检查结果表 inspect_result
 create table if not exists inspect_result(
     id          int             not null primary key auto_increment comment "id",
@@ -101,7 +83,7 @@ create table if not exists inspect_result(
     personal    varchar(512)    default '{"分数":100}' comment "个人卫生",
     floor       varchar(512)    default '{"分数":100}' comment "楼值",
     discipline  varchar(512)    default '{"分数":100}' comment "纪律",
-    headteacher_id     tinyint not null comment "班主任id",
+    user_id     tinyint not null comment "对应user表中的班主任id",
     inspect_time       datetime    default now() comment "检查时间"
 ) default charset=utf8 comment '检查结果表';
 
@@ -109,31 +91,19 @@ create table if not exists inspect_result(
 
 -- 3 插入数据
 -- 3.1 班级表
-insert into inspect_class(`cls`,`grade`,`depart`,`headteacher_id`)
+insert into inspect_class(`cls`,`grade`,`user_id`)
 values 
-("1班","2020级","大数据",1),
-("2班","2020级","大数据",2),
-("1班","2021级","大数据",3);
+("1班","2020级",1),
+("2班","2020级",2),
+("1班","2021级",3);
 
--- 3.2 班主任表
-insert ignore into person_headteacher(`id`,`name`,`username`,`password`,`depart`)
+-- 3.2 人员表
+insert into user(`id`,`name`,`username`,`password`,`is_headdepart`,`is_inspector`,`is_headteacher`,`permission_level`)
 values
-("1","邢予","邢予","xingyu321","大数据"),
-("2","吴洁","吴洁","wujie321","大数据"),
-("3","王钰坤","王钰坤","wangyukun321","大数据");
-
--- 3.3 系主任表
-insert into person_headdepart(`id`,`name`,`username`,`password`,`depart`)
-values 
-("1","陕娟娟","陕娟娟","shanjuanjuan321","大数据"),
-("2","王璐","王璐","wanglu321","大数据"),
-("3","赵东","赵东","zhaodong321","大数据"),
-("4","方荣卫","方荣卫","fangrongwei321","大数据");
-
--- 3.4 检查员表
-insert into person_inspector(`id`,`name`,`username`,`password`,`depart`)
-values 
-("1","陕娟娟","陕娟娟","shanjuanjuan321","大数据"),
-("2","王璐","王璐","wanglu321","大数据"),
-("3","赵东","赵东","zhaodong321","大数据"),
-("4","吴洁","吴洁","wujie321","大数据");
+("1","邢予","邢予","xingyu321",0,1,1,2),
+("2","吴洁","吴洁","wujie321",0,1,1,2),
+("3","王钰坤","王钰坤","wangyukun321",0,0,1,1),
+("4","陕娟娟","陕娟娟","shanjuanjuan321",0,1,0,3),
+("5","王璐","王璐","wanglu321",1,1,0,3),
+("6","赵东","赵东","zhaodong321",1,0,0,3),
+("7","方荣卫","方荣卫","fangrongwei321",1,0,0,3);
