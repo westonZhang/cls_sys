@@ -8,10 +8,8 @@
         - username：用户名
         - password：密码
     - 举例：
-        - 班主任吴洁需要登陆：
+        - 吴洁需要登陆：
         `username="吴洁",password="wujie321"`
-        - 检查员吴洁需要登陆：`username="吴洁",password="wujie321"`
-        - 系主任方荣卫需要登陆：`username="方荣卫",password="fangrongwei321"`
         
 - 返回结果
     - 正确请求：
