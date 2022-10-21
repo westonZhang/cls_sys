@@ -16,10 +16,22 @@ def home_page():
 def login():
     """
     get:获取人员的登陆信息
-    return:返回人员的id、username、token、类型
+    return:返回人员的id、username、token
     """
     # 设置返回值
-    return_value = {"status_code":200,"msg":{"error_msg":"","token":"","id":"","name":"","ptype":""}}
+    return_value = {
+        "status_code":200,      # 状态码
+        "msg":{
+            "error_msg":"",     # 错误信息
+            "token":"",         # token值
+            "user_id":"",       # 用户id
+            "name":"",          # 姓名
+            "is_headdepart":"",         # 是否系主任
+            "is_headteacher":"",        # 是否班主任
+            "is_inspector":"",          # 是否检查员
+            "permission_level":""       # 权限等级
+        }
+    }
     
     # 如果使用get方法发送请求，则返回错误信息
     if request.method == "GET":
@@ -28,10 +40,8 @@ def login():
         return return_value
 
     # 从参数中获取检查员的"username"、"password"
-    info = request.form
-    username = info.get("username")
-    password = info.get("password")
-    ptype = info.get("ptype")  # 人员类型
+    username = request.form.get("username")
+    password = request.form.get("password")
     
     if not username or not password:
         return_value["status_code"] = 404
@@ -39,36 +49,32 @@ def login():
         return return_value
 
     # 判断传递过来的username和password是否正确
-    # 查询id，name
-    # 根据ptype判断从哪张表查找数据
-    if ptype == st.ptype_班主任:
-        return_value['msg']['ptype'] = "班主任"
-        query_sql = f"select id,name from {st.TABLE_班主任表} where username='{username}' and password='{password}'"
-    elif ptype == st.ptype_系主任:
-        return_value['msg']['ptype'] = "系主任"
-        query_sql = f"select id,name from {st.TABLE_系主任表} where username='{username}' and password='{password}'"
-    elif ptype == st.ptype_检查员:
-        return_value['msg']['ptype'] = "检查员"
-        query_sql = f"select id,name from {st.TABLE_检查员表} where username='{username}' and password='{password}'"
-    else:
-        return_value["status_code"] = 404
-        return_value['msg']['error_msg'] = "“人员类型”参数有误，bzr/xzr/jcy三选一！"
-        return return_value
-
+    # 查询id、name、是否系主任、是否检查员、是否系主任、权限等级
+    query_sql = f"select id,name,is_headdepart,is_inspector,is_headteacher,permission_level from {st.TABLE_人员表} where username='{username}' and password='{password}'"
     res = us.query(query_sql)
     if not res:
         return_value["status_code"] = 404
-        return_value['msg']['error_msg'] = f"用户名或密码有误！或者【{return_value['msg']['ptype']}】中查无此人！"
+        return_value['msg']['error_msg'] = f"用户名或密码有误！"
         return return_value
     
     # 补充完成返回值，并返回
     token = uo.create_token()
-    return_value['msg']['token'] = token
-    return_value['msg']['id'] = res[0][0]
-    return_value['msg']['name'] = res[0][1]
+    return_value = {
+        "status_code":200,          # 状态码
+        "msg":{
+            "error_msg":"",         # 错误信息
+            "token":token,          # token值
+            "user_id":res[0][0],    # 用户id
+            "name":res[0][1],       # 姓名
+            "is_headdepart":res[0][2],         # 是否系主任
+            "is_inspector":res[0][3],          # 是否检查员
+            "is_headteacher":res[0][4],        # 是否班主任
+            "permission_level":res[0][5]       # 权限等级
+        }
+    }
 
     # 将token保存到数据库
-    update_sql = f"update {st.TABLE_检查员表} set token = '{token}' where id = {res[0][0]}"
+    update_sql = f"update {st.TABLE_人员表} set token = '{token}' where id = {res[0][0]}"
     res = us.update(update_sql)
     return return_value
 
