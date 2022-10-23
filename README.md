@@ -3,7 +3,7 @@
 ## 一、接口说明文档
 ### 1. 登陆验证接口
 - 请求方式：POST
-- 参数：username、password、ptype
+- 参数：username、password
     - 说明：
         - username：用户名
         - password：密码
