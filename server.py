@@ -1,3 +1,4 @@
+from select import kqueue
 from flask import Flask, request, url_for, render_template
 import setting as st
 import utils_sql as us
@@ -75,7 +76,7 @@ def login():
 
     # 将token保存到数据库
     update_sql = f"update {st.TABLE_人员表} set token = '{token}' where id = {res[0][0]}"
-    res = us.update(update_sql)
+    res = us.modify(update_sql)
     return return_value
 
 

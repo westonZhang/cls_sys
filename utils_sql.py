@@ -1,29 +1,33 @@
 # 数据库操作的util文件
-import traceback
 import pymysql
 import setting as st
-conn = pymysql.connect(**st.MYSQL_CONFIG)
-cursor = conn.cursor()
+
 
 def query(sql):
     """ 查询 """
-    cursor.execute(sql)
-    res = cursor.fetchall()
-    return res
+    try:
+        conn = pymysql.connect(**st.MYSQL_CONFIG)
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+            res = cursor.fetchall()
+            return res
+    except Exception as e:
+        print(f"Query Error! Sql:{sql}, Error:{e}")
+        return -1
+    finally:
+        conn.close()
 
 
-def update(sql):
-    """ 查询 """
-    cursor.execute(sql)
-    conn.commit()
-
-
-def delete(sql):
-    """ 查询 """
-    pass
-
-
-def insert(sql):
-    """ 查询 """
-    conn.commit()
-    pass
+def modify(sql):
+    """ 修改：插入、更新、删除 """
+    try:
+        conn = pymysql.connect(**st.MYSQL_CONFIG)
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+            conn.commit()
+    except Exception as e:
+        conn.rollback()  # 回滚
+        print(f"Modify Error! Sql:{sql}, Error:{e}")
+        return -1
+    finally:
+        conn.close()
