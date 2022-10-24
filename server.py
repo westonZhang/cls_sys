@@ -1,4 +1,3 @@
-from select import kqueue
 from flask import Flask, request, url_for, render_template
 import setting as st
 import utils_sql as us
